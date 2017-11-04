@@ -19,6 +19,8 @@
 //Comando Switch-Case
 #define TKSwitch 13
 #define TKCase 14
+#define TKBreak 64
+#define TKDefault 65
 //Expressoes
 #define TKAbreParentese 15
 #define TKFechaParentese 16
@@ -108,7 +110,9 @@ struct pal_res lista_pal[] = {
 		{"sizeof", TKSizeof},
 		{"static", TKStatic},
 		{"unsigned",TKUnsigned},
-		{"stdout", TKStdout}};
+		{"stdout", TKStdout},
+		{"break", TKBreak},
+		{"default", TKDefault}};
 
 int palavra_reservada(char lex[]) {
 	int postab = 0;
@@ -120,16 +124,18 @@ int palavra_reservada(char lex[]) {
 	return TKId;
 }
 
-int rec_equ(char st[], char lex[]) {
+int rec_equ(char st[], char lex[], short *op, short *numeroEspaco) {
 	int estado = 0, fim = 0, posl = 0;
+	if (*op == 1){
+		pos=0;
+		*op=0;
+	}
 	while (!fim) {
 		char c = st[pos];
-//printf("%s\n",st);
-//printf("char=%c pos=%d\n",c,pos);
 		lex[posl++] = c;
 		switch (estado) {
 		case 0:
-			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || (c >= '0' && c <= '9')) {
 				pos++;
 				estado = 1;
 				break;
@@ -329,15 +335,15 @@ int rec_equ(char st[], char lex[]) {
 					return TKOr;
 				}
 			}
-			if (c == ' ' || c == '\n') {
+			if (c == ' ' || c == '\n' || c == '\t') {
+				*numeroEspaco += 1;
 				pos++;
 				posl--;
 				break;
 			}
 			if (c == '\0')
 				return -1;
-			printf("Erro léxico: encontrou o caracter %c na posição %d", c,
-					pos);
+			printf("Erro léxico: encontrou o caracter %c na posição %d", c, pos);
 			break;
 		case 1:
 			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_') || (c >= '0' && c <= '9')) {
@@ -351,11 +357,77 @@ int rec_equ(char st[], char lex[]) {
 } // função
 
 int main() {
+	FILE *arquivoLeitura;
 	int tk;
 	char exp1[200], lex[20];
-	printf("Digite o programa a ser analisado (ex: void main(){int a,b,c;a=b+c;}\n");
-	gets(exp1);
-	while ((tk = rec_equ(exp1, lex)) != -1)
-		printf("%d %s\n", tk, lex);
-//system("pause");
+	char local[200] = "";
+	setbuf(stdout, NULL);
+	short opcao, op;
+
+	printf("Analisador Lexico e Sintatico da Linguagem C\n");
+	printf("1 - Digitar codigo-fonte.\n");
+	printf("2 - Abrir arquivo que contenha o codigo-fonte.\n");
+	printf("3 - Sair\n");
+	do{
+		printf("Opção: ");
+		scanf("%hd", &opcao);
+		fflush(stdin);
+	}while(opcao < 1 || opcao > 3);
+
+	switch(opcao){
+	case 1:{
+		printf("Digite o programa a ser analisado (ex: void main(){int a,b,c;a=b+c;}\n");
+		gets(exp1);
+	}break;
+	case 2:{
+		printf("\nDigite o local do arquivo + nome + extensão.\n");
+		printf("Exemplo: C:/User/Desktop/arquivo.c\n");
+		printf("Local: ");
+		scanf("%s", local);
+		fflush(stdin);
+		arquivoLeitura = fopen(local, "r+");
+		if (arquivoLeitura == NULL){
+			printf("Erro: Arquivo não encontrado ou não existe.");
+			exit(1);
+		}
+
+	}break;
+	case 3: exit(1);
+	}
+
+	FILE *arquivoGravacao = fopen("Saida.lex", "w+");
+	short numeroLinha=0, numeroColuna=0, numeroEspaco=0, comeco=1;
+
+	do{
+		if (opcao == 2){
+			strcpy(exp1, "");
+			fgets(exp1, 100, arquivoLeitura);
+			op= 1;
+			numeroLinha++;
+			numeroColuna= 0;
+			numeroEspaco= 0;
+			comeco = 1;
+		}
+		//tamanho da linha;
+		//printf("%d", strlen(exp1));
+
+		while ((tk = rec_equ(exp1, lex, &op, &numeroEspaco)) != -1){
+			if (comeco==1){
+				numeroColuna += numeroEspaco;
+			}else{
+				numeroColuna += strlen(lex) + numeroEspaco;
+			}
+			fprintf(arquivoGravacao, "Token:%d Lexema:%s Linha:%hd Coluna:%hd\n", tk, lex, numeroLinha, numeroColuna);
+			//printf("Token: %d Lexema: %s Coluna: %hd\n", tk, lex, numeroColuna);
+			numeroEspaco = 0;
+			if (comeco == 1){
+				numeroColuna += strlen(lex);
+				comeco= 2;
+			}
+		}
+		comeco = 1;
+	}while(opcao == 2 && !feof(arquivoLeitura));
+	printf("Arquivo Saida.lex criado com sucesso.");
+	fclose(arquivoGravacao);
+	return EXIT_SUCCESS;
 }
