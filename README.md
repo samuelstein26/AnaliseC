@@ -1,54 +1,18 @@
-# AnaliseC
-Analisador sintático e lexico da linguem de programação C
-
-Comando para trabalhar com o GitHub
+Analisador Léxico da Linguagem C
 ========
 
-Clonar o diretorio para seu computador
+Ao abrir o programa serão ofertadas três opções:
 -----------
 ```
-git clone url
+1 - Digitar código-fonte.
+2 - Abrir arquivo que contenha o código-fonte.
+3 - Sair.
 ```
 
-Acessar a pasta .master
------------
-```
-cd <pasta>
-```
+Ao selecionar a primeira opção, você poderá digitar o código na linguagem C diretamente no programa, mas deverá respeitar uma linha de 500 caracteres. Para continuar à análise léxica basta clicar sobre o botão "Enter" em seu teclado.
 
-Para configurar o git
------------
-```
-git config --global user.email "you@example.com"
-git config --global user.name "Your Name"
-```
+Já se você selecionar a opção de número dois, você poderá abrir um arquivo onde contenha o código-fonte, porém é necessário que descreva seu caminho completo, exemplo C:\User\Desktop\codigo.txt
 
-Para atualizar seu diretorio no computador
------------
-```
-git pull
-```
+A opção três apenas fecha o programa.
 
-Para verificar quais arquivos foram modificados
------------
-```
-git status
-```
-
-Para adicionar para ser enviados
------------
-```
-git add <nome>|*
-```
-
-Para comitar, a mensagem é obrigatoria, exemplo "versao1_0"
------------
-```
-git commit -m "mensagem"
-```
-
-Para transferir do seu pc que você fez o commit para o github
------------
-```
-git push origin
-```
+Tanto a opção 1, como a opção 2, após o programa obter o código-fonte, gerará um arquivo chamado Saida.lex, nesse conterá o token, o lexema, o número da linha e o número da coluna de cada token.

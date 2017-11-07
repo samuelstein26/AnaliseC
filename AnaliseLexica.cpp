@@ -61,7 +61,6 @@
 #define TKPrintf 49
 #define TKPrivate 50
 #define TKPublic 51
-#define TKScanf 52
 #define TKFflush 53
 #define TKStdin 54
 #define TKNULL 55
@@ -94,7 +93,6 @@ struct pal_res lista_pal[] = {
 		{"printf", TKPrintf},
 		{"private",TKPrivate},
 		{"public", TKPublic},
-		{"scanf", TKScanf},
 		{"fflush", TKFflush},
 		{"stdin", TKStdin},
 		{"NULL", TKNULL},
@@ -343,7 +341,7 @@ int rec_equ(char st[], char lex[], short *op, short *numeroEspaco) {
 			}
 			if (c == '\0')
 				return -1;
-			printf("Erro léxico: encontrou o caracter %c na posição %d", c, pos);
+			printf("Erro lexico: encontrou o caracter %c na posição %d", c, pos);
 			break;
 		case 1:
 			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_') || (c >= '0' && c <= '9')) {
@@ -359,17 +357,17 @@ int rec_equ(char st[], char lex[], short *op, short *numeroEspaco) {
 int main() {
 	FILE *arquivoLeitura;
 	int tk;
-	char exp1[200], lex[20];
+	char exp1[500], lex[20];
 	char local[200] = "";
 	setbuf(stdout, NULL);
 	short opcao, op;
 
-	printf("Analisador Lexico e Sintatico da Linguagem C\n");
+	printf("Analisador Lexico da Linguagem C\n");
 	printf("1 - Digitar codigo-fonte.\n");
 	printf("2 - Abrir arquivo que contenha o codigo-fonte.\n");
 	printf("3 - Sair\n");
 	do{
-		printf("Opção: ");
+		printf("Opcao: ");
 		scanf("%hd", &opcao);
 		fflush(stdin);
 	}while(opcao < 1 || opcao > 3);
@@ -380,14 +378,14 @@ int main() {
 		gets(exp1);
 	}break;
 	case 2:{
-		printf("\nDigite o local do arquivo + nome + extensão.\n");
+		printf("\nDigite o local do arquivo + nome + extensao.\n");
 		printf("Exemplo: C:/User/Desktop/arquivo.c\n");
 		printf("Local: ");
 		scanf("%s", local);
 		fflush(stdin);
 		arquivoLeitura = fopen(local, "r+");
 		if (arquivoLeitura == NULL){
-			printf("Erro: Arquivo não encontrado ou não existe.");
+			printf("Erro: Arquivo nao encontrado ou nao existe.");
 			exit(1);
 		}
 
@@ -396,7 +394,7 @@ int main() {
 	}
 
 	FILE *arquivoGravacao = fopen("Saida.lex", "w+");
-	short numeroLinha=0, numeroColuna=0, numeroEspaco=0, comeco=1;
+	short numeroLinha=0, numeroColuna=0, numeroEspaco=0;
 
 	do{
 		if (opcao == 2){
@@ -406,28 +404,17 @@ int main() {
 			numeroLinha++;
 			numeroColuna= 0;
 			numeroEspaco= 0;
-			comeco = 1;
 		}
-		//tamanho da linha;
-		//printf("%d", strlen(exp1));
 
 		while ((tk = rec_equ(exp1, lex, &op, &numeroEspaco)) != -1){
-			if (comeco==1){
-				numeroColuna += numeroEspaco;
-			}else{
-				numeroColuna += strlen(lex) + numeroEspaco;
-			}
+			numeroColuna += numeroEspaco;
 			fprintf(arquivoGravacao, "Token:%d Lexema:%s Linha:%hd Coluna:%hd\n", tk, lex, numeroLinha, numeroColuna);
-			//printf("Token: %d Lexema: %s Coluna: %hd\n", tk, lex, numeroColuna);
+			numeroColuna += strlen(lex);
 			numeroEspaco = 0;
-			if (comeco == 1){
-				numeroColuna += strlen(lex);
-				comeco= 2;
-			}
 		}
-		comeco = 1;
 	}while(opcao == 2 && !feof(arquivoLeitura));
-	printf("Arquivo Saida.lex criado com sucesso.");
+	printf("Arquivo Saida.lex criado com sucesso.\n");
+	system("PAUSE");
 	fclose(arquivoGravacao);
 	return EXIT_SUCCESS;
 }
