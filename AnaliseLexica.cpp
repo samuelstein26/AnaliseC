@@ -80,7 +80,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-int pos = 0, n=0;
+int pos = 0, n=0, error2=0;
 int pilha[300];
 int auxpilha[300];
 
@@ -137,10 +137,13 @@ void empilha(short *x){
 }
 
 int analisesintatica(int tk){
-	//printf("Numero: %d Token: %d Pilha: %d\n", n, tk, pilha[n]); //apenas testes
+
+	//********************   TESTES *******************************//
+	//printf("Numero: %d Token: %d Pilha: %d\n", n, tk, pilha[n]);
+	//*************************************************************//
+
 	short x;
-	if (pilha[n] > 0){
-        //SIGNIFICA QUE É TERMINAL
+	if (pilha[n] > 0){ //SIGNIFICA QUE É TERMINAL
 
         if (tk == 47){ //é ponto e virgula, então zera n e a pilha
             desempilha(n);
@@ -152,7 +155,6 @@ int analisesintatica(int tk){
 
 		/**************************************   Comando IF **********************************************/
 		if (tk == 11){ //token if
-			//funçao para obter os dados da pilha da posicao até o fim
 			desempilha(n);
 			pilha[n]= 11;
 			pilha[n+1]= 15;
@@ -161,7 +163,6 @@ int analisesintatica(int tk){
 			pilha[n+4]= -2;
 			pilha[n+5]= -3;
 			x=n + 6;
-			//funçao para empilhar novamente
 			empilha(&x);
             return 0;
 		}
@@ -207,7 +208,6 @@ int analisesintatica(int tk){
 			pilha[n+5]= 16;
 			x=n + 6;
 			empilha(&x);
-			//analisesintatica(tk);
             return 0;
 		}
 
@@ -226,8 +226,13 @@ int analisesintatica(int tk){
             return 0;
 		}
 
+		if (pilha[n] == 999){
+			return 0;
+		}
+
         if (pilha[n] != tk){
-            return pilha[n];
+            error2 = pilha[n];
+        	return 0;
         }
 
 	}else if (pilha[n] < 0){
@@ -260,10 +265,7 @@ int analisesintatica(int tk){
             	empilha(&x);
             	analisesintatica(tk);
             }else{
-                desempilha(n);
                 pilha[n]= -10;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
@@ -313,146 +315,92 @@ int analisesintatica(int tk){
 
         if (pilha[n] == -6){ //não terminal Sinal
             if (tk == 13){
-                desempilha(n);
                 pilha[n]= 13;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 25){
-                desempilha(n);
                 pilha[n]= 25;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 26){
-                desempilha(n);
                 pilha[n]= 26;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 27){
-                desempilha(n);
                 pilha[n]= 27;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 23){
-                desempilha(n);
                 pilha[n]= 23;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 21){
-                desempilha(n);
                 pilha[n]= 21;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 28){
-                desempilha(n);
                 pilha[n]= 28;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 31){
-                desempilha(n);
                 pilha[n]= 31;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 29){
-                desempilha(n);
                 pilha[n]= 29;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 30){
-                desempilha(n);
                 pilha[n]= 30;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 63){
-                desempilha(n);
                 pilha[n]= 63;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 34){
-                desempilha(n);
                 pilha[n]= 34;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 38){
-                desempilha(n);
                 pilha[n]= 38;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 39){
-                desempilha(n);
                 pilha[n]= 39;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 38){
-                desempilha(n);
                 pilha[n]= 38;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 39){
-                desempilha(n);
                 pilha[n]= 39;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 24){
-                desempilha(n);
                 pilha[n]= 24;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
             if (tk == 22){
-                desempilha(n);
                 pilha[n]= 22;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
@@ -490,17 +438,11 @@ int analisesintatica(int tk){
 
         if (pilha[n] == -8){ //nao terminal OPCompeComandoElse
             if (tk == 19){
-                desempilha(n);
                 pilha[n]= -2;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }else{
-                desempilha(n);
                 pilha[n]= -10;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }
@@ -629,24 +571,15 @@ int analisesintatica(int tk){
 
         if (pilha[n] == -12){ //terminal ID
             if (tk == 66){ //comando float
-                desempilha(n);
                 pilha[n]= 66;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }else if (tk == 67){ //comando int
-                desempilha(n);
                 pilha[n]= 67;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
-            }else if (tk == 1){
-                desempilha(n); //comando id
+            }else if (tk == 1){ //comando id
                 pilha[n]= 1;
-                x=n + 1;
-                empilha(&x);
                 analisesintatica(tk);
                 return 0;
             }else {
@@ -673,19 +606,17 @@ int analisesintatica(int tk){
                 analisesintatica(tk);
                 return 0;
         	}else if (tk == 15){
-                //desempilha(n);
                 pilha[n]= -19;
                 analisesintatica(tk);
-                //x=n + 2;
-                //empilha(&x);
                 return 0;
           	}else{
           		n++;
           		analisesintatica(tk);
+          		return 0;
           	}
       	}
 
-        if (pilha[n] == -15){
+        if (pilha[n] == -15){ //nao terminal ComDeclaracao
             desempilha(n);
             pilha[n]= -18;
             pilha[n+1]= -12;
@@ -696,7 +627,7 @@ int analisesintatica(int tk){
             return 0;
         }
 
-        if (pilha[n] == -16){
+        if (pilha[n] == -16){ //nao terminal FuncRep1
             desempilha(n);
             pilha[n]= -18;
             pilha[n+1]= -12;
@@ -707,7 +638,7 @@ int analisesintatica(int tk){
             return 0;
         }
 
-        if (pilha[n] == -17){
+        if (pilha[n] == -17){  //nao terminal FuncRep2
             if (tk == 45){
                 desempilha(n);
                 pilha[n]= 45;
@@ -767,7 +698,7 @@ int analisesintatica(int tk){
             return 0;
         }
 
-        if (pilha[n] == -20){
+        if (pilha[n] == -20){ //nao termina AntesRep
             if (tk == 15){
                 desempilha(n);
                 pilha[n]= 15;
@@ -1041,7 +972,7 @@ int rec_equ(char st[], char lex[], short *op, short *numeroEspaco) {
                 break;
             }
             if (c == '\0')
-                return -1;
+               return -1;
             pos++;
             lex[posl] = '\0';
             return -50;
@@ -1101,7 +1032,7 @@ void informaError(char lex[], int erro, short lin, char ant[]){
         case 66: strcpy(nome, "Constante Float");break;
         case 67: strcpy(nome, "Constante Int");
 	}
-	printf("Erro: Esperado '%s' mas informado '%s' na linha %hd apos %s", nome, lex, lin, ant);
+	printf("\nErro: Esperado '%s' mas informado '%s' na linha %hd apos '%s'", nome, lex, lin, ant);
 }
 
 int main() {
@@ -1111,7 +1042,7 @@ int main() {
     char local[200] = "";
     setbuf(stdout, NULL);
     short opcao, op;
-    int errorCode;
+    int next;
 
     //montando as duas primeiras posições
     pilha[0]= -10;
@@ -1168,18 +1099,13 @@ int main() {
             numeroColuna += numeroEspaco;
 
             if (tk == -1){
-            	int num;
-            	for (num=n+1; pilha[num] != 999; num++){
-            		if (pilha[num] > 0){
-            			errorCode = pilha[num];
-            		}
-            	}
-            }else {
-            	errorCode = analisesintatica(tk);
+            	break;
             }
 
-            if (errorCode != 0){
-            	informaError(lex, errorCode,  numeroLinha, ant);
+            next = analisesintatica(tk);
+
+            if (error2 != 0){
+            	informaError(lex, error2,  numeroLinha, ant);
                 exit(1);
             }
             n++;
@@ -1193,8 +1119,20 @@ int main() {
             numeroEspaco = 0;
         }
     }while(opcao == 2 && !feof(arquivoLeitura));
+
+	int num, achoo=0;
+	for (num = n; pilha[num] != 999; num++) {
+		if (pilha[num] > 0) {
+			informaError(lex, pilha[num], numeroLinha, ant);
+			achoo= 1;
+		}
+	}
+	if (pilha[num++] == 999 && achoo == 0) {
+		printf("\nNao contem erro sintatico.\n");
+		exit(1);
+	}
+
     printf("\nArquivo Saida.lex criado com sucesso.\n");
-    printf("Nao contem erro sintatico.\n");
     fclose(arquivoGravacao);
     return EXIT_SUCCESS;
 }
